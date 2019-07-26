@@ -22,14 +22,16 @@ class AirticleListController {
         let endPoint = AirticleEndpoint.airticles(apiKey: AirticleClient.apiKey)
         AirticleClient.shared.fetch(with: endPoint ) { [weak self] (result) in
             self?.viewModel.isLoading.value = false
-            self?.viewModel.isTableViewHidden.value = false
             
             switch result {
             case .error(let error) :
                 self?.viewModel.errorMsg.value = error.localizedDescription
                 
             case .success(let airticles) :
-                self?.viewModel.rowViewModels.value = airticles.results
+                if (airticles.results.count > 0){
+                    self?.viewModel.isTableViewHidden.value = false
+                    self?.viewModel.rowViewModels.value = airticles.results
+                }
             }
         }
     }
